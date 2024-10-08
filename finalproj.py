@@ -25,6 +25,7 @@ def api_all():
     investor_list = execute_read_query(conn, call_investor)
     return jsonify(investor_list)
 
+#returns one investor from ID
 @app.route('/api/single_investor', methods=['GET'])
 def api_id():
     request_data = request.get_json()
@@ -37,8 +38,28 @@ def api_id():
             return jsonify(result)
     return "no match found"
 
+# add users
+@app.route('/api/add_investor', methods =['POST'])
+def api_add():
+    request_data = request.get_json()
+    new_fname = request_data["firstname"]
+    new_lname = request_data["lastname"]
+    query = """INSERT INTO investor (firstname, lastname)
+    VALUES ('%s','%s');""" %(new_fname, new_lname)
+    execute_query(conn, query) 
+    return "add request successful"
 
-
+#deletes user
+@app.route('/api/delete_investor', methods=['DELETE'])
+def api_delete():
+    request_data = request.get_json()
+    idToDelete = request_data['id']
+    for i in range(len(investor_tb) -1, -1, -1):
+        if investor_tb[i]["ID"] == idToDelete:
+            #query to delete where the id matches
+            query = "DELETE FROM investor WHERE ID = %s" %(idToDelete)
+            execute_query(conn, query)
+            return "delete request successful"
 
 
 
