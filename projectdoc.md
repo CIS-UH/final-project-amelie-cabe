@@ -1,6 +1,7 @@
 CIS 2368 Project Document 
 
-Amelie: 
+Amelie Cabergas: 
+ID: 2079648
 
 Set up database and SQL connection. 
 
@@ -8,7 +9,8 @@ Push and commit changes to GitHub.
 
 CRUD operations for investor, bond, and stock tables. 
 
-Eman: 
+Eman Arshad:
+ID: 2048488 
 
 Read operations to return investor's entire portfolio. 
 

@@ -14,25 +14,6 @@ app.config["DEBUG"] = True #allows to show errors in browser
 conn = create_connection("cis2368fall.c1ai8ok8u443.us-east-1.rds.amazonaws.com", "admin", "cis2368123", "cis2368falldb")
 cursor = conn.cursor(dictionary = True)
 
-# all return for testing CRUD operations
-@app.route('/api/investor', methods=['GET'])
-def api_all():
-    call_investor = "SELECT * FROM investor"
-    investor_list = execute_read_query(conn, call_investor)
-    return jsonify(investor_list)
-
-@app.route('/api/stock', methods=['GET'])
-def api_all_stock():
-    call_stock = "SELECT * FROM stock"
-    stock_list = execute_read_query(conn, call_stock)
-    return jsonify(stock_list)
-
-@app.route('/api/bond', methods=['GET'])
-def api_all_bond():
-    call_bond = "SELECT * FROM bond"
-    bond_list = execute_read_query(conn, call_bond)
-    return jsonify(bond_list)
-
 #returns one investor from ID
 @app.route('/api/single_investor', methods=['GET'])
 def api_investor_id():
