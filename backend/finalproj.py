@@ -1,4 +1,4 @@
-# Amelie Cabergas ID: 2079648
+# Amelie Cabergas
 import flask
 from flask import jsonify
 from flask import request
