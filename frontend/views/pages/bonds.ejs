@@ -1,0 +1,31 @@
+<!-- views/pages/bond.ejs -->
+<html>
+  <head>
+    <title> Bond Details</title>
+  </head>
+  <body>
+    <h1>Bond: <%= bond.bondname %> (<%= bond.abbreviation %>)</h1>
+    <p>Current Price: <%= bond.currentprice %></p>
+    
+    <!-- Edit Bomd Form -->
+    <form action="/bond/edit/<%= bond.id %>" method="POST">
+      <input type="hidden" name="id" value="<%= bond.id %>"> <!-- Hidden field for bond ID -->
+      <label for="bondname">Bond Name:</label>
+      <input type="text" id="bondname" name="bondname" value="<%= bond.bondname %>">
+      
+      <label for="abbreviation">Bond Abbreviation:</label>
+      <input type="text" id="abbreviation" name="abbreviation" value="<%= bond.abbreviation %>">
+      
+      <label for="currentprice">Current Price:</label>
+      <input type="text" id="currentprice" name="currentprice" value="<%= bond.currentprice %>">
+      
+      <button type="submit">Edit Bomd</button>
+    </form>
+
+    <!-- Delete Bond Form -->
+    <form action="/bond/delete/<%= bond.id %>" method="POST">
+      <input type="hidden" name="id" value="<%= bond.id %>">
+      <button type="submit">Delete Bond</button>
+    </form>
+  </body>
+</html>

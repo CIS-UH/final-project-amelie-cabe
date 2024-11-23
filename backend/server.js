@@ -7,7 +7,6 @@ const path = require("path");
 const app = express();
 const bodyParser = require('body-parser')
 
-
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 // route path to pages file within views
@@ -31,6 +30,14 @@ app.get('/', (req, res) => {
     message: "Welcome to the Stock Brockerage System!"
   });
 });
+
+// set 2nd id that acts as a username for the investors, id for 
+const secondaryinvestorIDtoPrimaryID = {
+    "nepobby300": 1,
+    "manty1800": 2,
+    "greenwoe1963": 4,
+"johndoe3000": 5}
+
 
 // index page to endpoint return one investor
 app.get("/investor/:id", async (req, res) => {
@@ -170,11 +177,79 @@ app.post("/bond/delete/:id", async (req, res) => {
         res.status(500).send("Error with deleting bond");
     }
 });
+
 // index page to endpoint investor portfolio
-// index page to endpoint stock transactions
-// index page to endpoint bond transactions
-// index page to endpoint to delete stock transactions
-// index page to endpoint to delete bond transactions
+app.get("/investor/:id/portfolio", async (req, res) => {
+    try {
+        const response = await axios.get(`${API_URL}/portfolio`, {
+            params: { investorID: req.params.id }
+        });
+        const portfolio = response.data;
+        res.render("portfolio", { portfolio });
+    } catch (error) {
+        console.error("Error fetching portfolio:", error.message);
+        res.status(500).send("Error fetching portfolio");
+    }
+  });
+  
+  // index page to endpoint stock transactions
+  app.post("/stocktransaction", async (req, res) => {
+    try {
+        const { investorid, stockid, quantity } = req.body;
+        await axios.post(`${API_URL}/add_stocktransaction`, {
+            investorid,
+            stockid,
+            quantity
+        });
+        res.redirect(`/investor/${investorid}/portfolio`);
+    } catch (error) {
+        console.error("Error adding stock transaction:", error.message);
+        res.status(500).send("Error adding stock transaction");
+    }
+  });
+  
+  // index page to endpoint bond transactions
+  app.post("/bondtransaction", async (req, res) => {
+    try {
+        const { investorid, bondid, quantity } = req.body;
+        await axios.post(`${API_URL}/add_bondtransaction`, {
+            investorid,
+            bondid,
+            quantity
+        });
+        res.redirect(`/investor/${investorid}/portfolio`);
+    } catch (error) {
+        console.error("Error adding bond transaction:", error.message);
+        res.status(500).send("Error adding bond transaction");
+    }
+  });
+  
+  // index page to endpoint to delete stock transactions
+  app.post("/stocktransaction/delete/:id", async (req, res) => {
+    try {
+        await axios.delete(`${API_URL}/delete_stocktransaction`, {
+            data: { transactionID: req.params.id }
+        });
+        res.redirect("back");
+    } catch (error) {
+        console.error("Error deleting stock transaction:", error.message);
+        res.status(500).send("Error deleting stock transaction");
+    }
+  });
+  
+  // index page to endpoint to delete bond transactions
+  app.post("/bondtransaction/delete/:id", async (req, res) => {
+    try {
+        await axios.delete(`${API_URL}/delete_bondtransaction`, {
+            data: { transactionID: req.params.id }
+        });
+        res.redirect("back");
+    } catch (error) {
+        console.error("Error deleting bond transaction:", error.message);
+        res.status(500).send("Error deleting bond transaction");
+    }
+  });
+  
 
 
 

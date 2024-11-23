@@ -1,0 +1,31 @@
+
+<html>
+  <head>
+    <title> Stock Details</title>
+  </head>
+  <body>
+    <h1>Stock: <%= stock.stockname %> (<%= stock.abbreviation %>)</h1>
+    <p>Current Price: <%= stock.currentprice %></p>
+    
+    <!-- editing stock  -->
+    <form action="/stock/edit/<%= stock.id %>" method="POST">
+      <input type="hidden" name="id" value="<%= stock.id %>"> <!-- Hidden field for stock ID -->
+      <label for="stockname">Stock Name:</label>
+      <input type="text" id="stockname" name="stockname" value="<%= stock.stockname %>">
+      
+      <label for="abbreviation">Stock Abbreviation:</label>
+      <input type="text" id="abbreviation" name="abbreviation" value="<%= stock.abbreviation %>">
+      
+      <label for="currentprice">Current Price:</label>
+      <input type="text" id="currentprice" name="currentprice" value="<%= stock.currentprice %>">
+      
+      <button type="submit">Edit Stock</button>
+    </form>
+
+    <!-- delete stock -->
+    <form action="/stock/delete/<%= stock.id %>" method="POST">
+      <input type="hidden" name="id" value="<%= stock.id %>">
+      <button type="submit">Delete Stock</button>
+    </form>
+  </body>
+</html>
