@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'frontend/views/pages'));
 
 // static folder for public assets (CSS, JS, images)
-app.use(express.static('./public'));
+app.use(express.static(path.join(__dirname, 'frontend', 'public')));
 
 // body-parser middleware to handle form data
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public"))); // accesses static files in the public file
 
 //API URL to Flask in sql.py
-const API_URL = "http://127.0.0.1:5000"
+const API_URL = "http://127.0.0.1:5000/api"
 
 // res.render to load home page
 app.get('/', (req, res) => {
@@ -81,6 +81,7 @@ try {
 
 // index page to endpoint delete investor
 app.post("/investor/delete", async (req, res) => {
+    const { id } = req.body;
     try {
         await axios.delete(`${API_URL}/delete_investor`, {
             data: {ID: req.params.id}
