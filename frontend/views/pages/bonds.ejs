@@ -1,13 +1,14 @@
 <!-- views/pages/bond.ejs -->
 <html>
   <head>
+    <%- include('../partials/head.ejs'); %>
     <title> Bond Details</title>
   </head>
   <body>
     <h1>Bond: <%= bond.bondname %> (<%= bond.abbreviation %>)</h1>
     <p>Current Price: <%= bond.currentprice %></p>
     
-    <!-- Edit Bomd Form -->
+    <!-- bond form -->
     <form action="/bond/edit/<%= bond.id %>" method="POST">
       <input type="hidden" name="id" value="<%= bond.id %>"> <!-- Hidden field for bond ID -->
       <label for="bondname">Bond Name:</label>
@@ -22,7 +23,7 @@
       <button type="submit">Edit Bomd</button>
     </form>
 
-    <!-- Delete Bond Form -->
+    <!-- delete bond -->
     <form action="/bond/delete/<%= bond.id %>" method="POST">
       <input type="hidden" name="id" value="<%= bond.id %>">
       <button type="submit">Delete Bond</button>

@@ -10,7 +10,7 @@ const bodyParser = require('body-parser')
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 // route path to pages file within views
-app.set('views', path.join(__dirname, 'views/pages'));
+app.set('views', path.join(__dirname, 'frontend/views/pages'));
 
 // static folder for public assets (CSS, JS, images)
 app.use(express.static('./public'));
@@ -31,35 +31,32 @@ app.get('/', (req, res) => {
   });
 });
 
-// set 2nd id that acts as a username for the investors, id for 
-const secondaryinvestorIDtoPrimaryID = {
-    "nepobby300": 1,
-    "manty1800": 2,
-    "greenwoe1963": 4,
-"johndoe3000": 5}
-
+app.get("/investor", (req, res) => {
+    res.render("investor", {investor: null, searchPerformed: false}); 
+});
 
 // index page to endpoint return one investor
-app.get("/investor/:id", async (req, res) => {
-    //set constant that requires id to fetch possible existing investor
-    try{
-        const response = await axios.get(`${API_BASE_URL}/single_investor`, {
-            data: {ID: req.params.id}
-        });
-        const investor = response.data[0];
-        res.render("investor", {investor}); 
+app.post("/investor/find", async (req, res) => {
+    const { id } = req.body;  // id from submission
+    try {
+        // connect to FLASK
+        const response = await axios.get(`${API_URL}/single_investor`, { data: { ID: id } });
+        const investor = response.data[0] || null;
+
+        // render investor
+        res.render("investor", { investor, searchPerformed: true });
     } catch (error) {
         console.error("Error fetching investor:", error.message);
-        res.status(500).send("Error fetching investor");
+        res.render("investor", { investor: null, searchPerformed: true });  // Handle error gracefully
     }
 });
 
 // index page to endpoint add investor
-app.post("/investor", async (req, res) => {
+app.post("/investor/add", async (req, res) => {
     try {
         const { fname, lname } = req.body;
         await axios.post(`${API_URL}/add_investor`, { fname, lname });
-        res.redirect("/investors");
+        res.redirect("/");
     } catch (error) {
         console.error("Error adding investor:", error.message);
         res.status(500).send("Error with adding investor");
@@ -67,7 +64,7 @@ app.post("/investor", async (req, res) => {
 });
 
 // index page to endpoint edit investor
-app.post("/investor/edit/:id", async (req, res) => {
+app.post("/investor/edit", async (req, res) => {
 try {
     const {fname, lname} = req.body;
     await axios.put(`${API_URL}/edit_investor`, {
@@ -75,7 +72,7 @@ try {
         fname,
         lname
     });
-    res.redirect(`/investor/${req.params.id}`);
+    res.redirect(`/`);
 } catch (error) {
     console.error("Error with editing investor:", error.message);
     res.status(500).send("Error with editing investor");
@@ -83,7 +80,7 @@ try {
 });
 
 // index page to endpoint delete investor
-app.post("/investor/delete/:id", async (req, res) => {
+app.post("/investor/delete", async (req, res) => {
     try {
         await axios.delete(`${API_URL}/delete_investor`, {
             data: {ID: req.params.id}
@@ -96,7 +93,7 @@ app.post("/investor/delete/:id", async (req, res) => {
 });
 
 // index page to endpoint add stock
-app.post("/stock", async (req, res) => {
+app.post("/stocks", async (req, res) => {
     try {
         const {stockname, abbreviation, currentprice} = req.body;
         await axios.post(`${API_URL}/add_stock`, {stockname, abbreviation, currentprice });

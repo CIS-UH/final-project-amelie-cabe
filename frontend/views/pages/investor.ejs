@@ -1,19 +1,69 @@
 <html>
   <head>
+    <%- include('../partials/head.ejs'); %>
     <title>Investor Details</title>
   </head>
   <body>
     <!-- will refer to secondary id/ username instead of id -->
-    <h1><%= investor.fname %> <%= investor.lname %></h1>
-    <p>Investor ID: <%= investor.id %></p>
-    <!-- investor actions -->
-    <form action="/investor/edit/<%= investor.id %>" method="POST">
-      <input type="text" name="fname" value="<%= investor.fname %>">
-      <input type="text" name="lname" value="<%= investor.lname %>">
-      <button type="submit">Edit Investor</button>
+    <h2>Find Investor by ID</h2>
+
+    <!-- input Investor ID -->
+    <form action="/investor/find" method="POST">
+        <label for="investor-id">Enter Investor ID:</label>
+        <input type="number" id="investor-id" name="id" required>
+        <button type="submit">Search</button>
     </form>
-    <form action="/investor/delete/<%= investor.id %>" method="POST">
-      <button type="submit">Delete Investor</button>
+
+    <!-- displays information if avaiable-->
+    <% if (searchPerformed) { %>
+      <% if (investor) { %>
+          <h2>Investor Details</h2>
+          <p><strong>First Name:</strong> <%= investor.fname %></p>
+          <p><strong>Last Name:</strong> <%= investor.lname %></p>
+          <p><strong>ID:</strong> <%= investor.id %></p>
+      <% } else { %>
+          <p>No investor found with the given ID.</p>
+      <% } %>
+  <% } %>
+
+  <!-- input Investor ID -->
+  <h2>Add Investor</h2>
+  <form action="/investor/add" method="POST">
+    <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname" required>
+        <br><br>
+        <label for="lname">Last Name:</label>
+        <input type="text" id="lname" name="lname" required>
+        <br><br>
+        <button type="submit">Add Investor</button>
+  </form>
+
+  <h2>Edit Investor</h2>
+  <form action="/investor/edit" method="POST">
+    <label for="investor-id">Enter Investor ID:</label>
+    <input type="number" id="investor-id" name="id" required>
+    <button type="submit">Edit Investor</button>
+  </form>
+
+  <% if (investor) { %>
+    <!-- investor found, show form -->
+    <h2>Edit Details for <%= investor.fname %> <%= investor.lname %></h2>
+    <form action="/investor/update/<%= investor.id %>" method="POST">
+        <div>
+            <label for="fname">First Name:</label>
+            <input type="text" id="fname" name="fname" value="<%= investor.fname %>" required>
+        </div>
+        <div>
+            <label for="lname">Last Name:</label>
+            <input type="text" id="lname" name="lname" value="<%= investor.lname %>" required>
+        </div>
+        <button type="submit">Update Investor</button>
     </form>
+<% } else if (searchPerformed) { %>
+    <!-- investor is not found -->
+    <p>No investor found with the given ID.</p>
+<% } %>
   </body>
+  <br>
+    <a href="/">Back to Home</a>
 </html>
